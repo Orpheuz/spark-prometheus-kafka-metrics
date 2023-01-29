@@ -1,8 +1,8 @@
 package org.apache.spark.metrics
 
-import com.codahale.metrics.{DefaultSettableGauge, MetricRegistry}
+import com.codahale.metrics.{DefaultSettableGauge, MetricRegistry, SettableGauge}
 import org.apache.spark.SparkEnv
-import org.apache.spark.metrics.KafkaMetricsSource.{CONSUMER_END_OFFSET, CONSUMER_LAST_RECORD_TIMESTAMP, CONSUMER_RECORDS_CONSUMED_RATE, CONSUMER_RECORDS_LAG, CONSUMER_RECORDS_LEAD, CONSUMER_START_OFFSET}
+import org.apache.spark.metrics.KafkaMetricsSource._
 import org.apache.spark.metrics.source.Source
 
 class KafkaMetricsSource extends Source {
@@ -11,23 +11,23 @@ class KafkaMetricsSource extends Source {
 
   override val metricRegistry: MetricRegistry = new MetricRegistry
 
-  def startOffsetGauge(queryName: String, topic: String, partition:String): DefaultSettableGauge[Long] = {
+  def startOffsetGauge(queryName: String, topic: String, partition:String): SettableGauge[Long] = {
     metricRegistry.gauge(MetricRegistry.name(queryName, topic, partition, CONSUMER_START_OFFSET))
   }
 
-  def endOffsetGauge(queryName: String, topic: String, partition:String): DefaultSettableGauge[Long] = {
+  def endOffsetGauge(queryName: String, topic: String, partition:String): SettableGauge[Long] = {
     metricRegistry.gauge(MetricRegistry.name(queryName, topic, partition, CONSUMER_END_OFFSET))
   }
 
-  def consumerRecordsLeadGauge(queryName: String, topic: String, partition:String): DefaultSettableGauge[Long] = {
+  def consumerRecordsLeadGauge(queryName: String, topic: String, partition:String): SettableGauge[Long] = {
     metricRegistry.gauge(MetricRegistry.name(queryName, topic, partition, CONSUMER_RECORDS_LEAD))
   }
 
-  def consumerRecordsLagGauge(queryName: String, topic: String, partition:String): DefaultSettableGauge[Long] = {
+  def consumerRecordsLagGauge(queryName: String, topic: String, partition:String): SettableGauge[Long] = {
     metricRegistry.gauge(MetricRegistry.name(queryName, topic, partition, CONSUMER_RECORDS_LAG))
   }
 
-  def consumerRecordsConsumedRateGauge(queryName: String): DefaultSettableGauge[Double] = {
+  def consumerRecordsConsumedRateGauge(queryName: String): SettableGauge[Double] = {
     metricRegistry.gauge(MetricRegistry.name(queryName, CONSUMER_RECORDS_CONSUMED_RATE))
   }
 

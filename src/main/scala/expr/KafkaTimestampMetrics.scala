@@ -5,7 +5,7 @@ import org.apache.spark.sql.Column
 import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.catalyst.expressions.codegen.CodegenFallback
 import org.apache.spark.sql.catalyst.expressions.{Expression, NullIntolerant, UnaryExpression}
-import org.apache.spark.sql.types.{DataType, TimestampType}
+import org.apache.spark.sql.types.{BinaryType, DataType}
 
 case class KafkaTimestampMetrics(queryName: String, child: Expression)
   extends UnaryExpression
@@ -13,7 +13,7 @@ case class KafkaTimestampMetrics(queryName: String, child: Expression)
 
   @transient private val kafkaMetricsSource = KafkaMetricsSource()
 
-  override def dataType: DataType = TimestampType
+  override def dataType: DataType = BinaryType
 
   override def eval(input: InternalRow): Any = {
 
@@ -25,7 +25,7 @@ case class KafkaTimestampMetrics(queryName: String, child: Expression)
       .consumerRecordsTimestampGauge(queryName, topic, partition.toString)
       .setValue(timestamp)
 
-    input.get(5, TimestampType)
+    input.get(1, BinaryType)
   }
 
   override protected def withNewChildInternal(newChild: Expression): Expression = {

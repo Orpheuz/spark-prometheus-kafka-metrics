@@ -27,12 +27,13 @@ object Main {
       .format("kafka")
       .option("startingOffsets", "earliest")
       .option("kafka.bootstrap.servers", bootstrapServers)
-      .option("subscribe", topicName)
+      .option("maxOffsetsPerTrigger", "100")
+      .option("subscribe", s"$topicName")
       .load()
 
     val queryName = "NoopKafkaQuery"
 
-    df.withColumn("timestamp", KafkaTimestampMetrics.metrics(queryName, struct(df.columns.map(col): _*)))
+    df.withColumn("value", KafkaTimestampMetrics.metrics(queryName, struct(df.columns.map(col): _*)))
       .writeStream
       .format("noop")
       .queryName(queryName)
